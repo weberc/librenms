@@ -17,13 +17,13 @@ modules:
           data:
              -
                 oid: SFOS-FIREWALL-MIB::sfosNPUTemperature
-                num_oid: '.1.3.6.1.4.1.2604.5.1.9.1{{ $noindex }}'
+                num_oid: '.1.3.6.1.4.1.2604.5.1.9.1.{{ $index }}'
                 index: sfosNPUTemperature.0
                 descr: 'NPU temperature'
                 divisor: 10
              -
                 oid: SFOS-FIREWALL-MIB::sfosCPUTemperature
-                num_oid: '.1.3.6.1.4.1.2604.5.1.9.2{{ $noindex }}'
+                num_oid: '.1.3.6.1.4.1.2604.5.1.9.2.{{ $index }}'
                 index: sfosCPUTemperature.0
                 descr: 'CPU temperature'
                 divisor: 10
