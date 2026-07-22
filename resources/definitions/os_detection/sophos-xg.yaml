@@ -1,7 +1,7 @@
 os: sophos-xg
 text: 'Sophos XG'
 type: appliance
-icon: sophos-xg
+icon: sophos
 group: sophos
 mib_dir: sophos
 over:
