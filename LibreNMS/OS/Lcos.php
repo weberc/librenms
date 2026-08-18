@@ -26,6 +26,8 @@
 
 namespace LibreNMS\OS;
 
+use App\Models\Vlan;
+use Illuminate\Support\Collection;
 use LibreNMS\Device\WirelessSensor;
 use LibreNMS\Enum\WirelessSensorType;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessCapacityDiscovery;
@@ -40,6 +42,7 @@ use LibreNMS\OS;
 use LibreNMS\Util\Mac;
 use LibreNMS\Util\Number;
 use LibreNMS\Util\Oid;
+use SnmpQuery;
 
 class Lcos extends OS implements
     WirelessFrequencyDiscovery,
@@ -51,6 +54,21 @@ class Lcos extends OS implements
     WirelessRateDiscovery,
     WirelessRssiDiscovery
 {
+    public function discoverVlans(): Collection
+    {
+        $vlans = parent::discoverVlans();
+        if ($vlans->isNotEmpty()) {
+            return $vlans;
+        }
+
+        return SnmpQuery::walk('LCOS-MIB::lcsSetupVlanNetworksTable')
+            ->mapTable(fn ($data) => new Vlan([
+                'vlan_vlan' => $data['LCOS-MIB::lcsSetupVlanNetworksEntryVlanId'] ?? null,
+                'vlan_domain' => 1,
+                'vlan_name' => $data['LCOS-MIB::lcsSetupVlanNetworksEntryName'] ?? '',
+            ]));
+    }
+
     /**
      * Discover wireless frequency.  This is in Hz. Type is frequency.
      * Returns an array of LibreNMS\Device\Sensor objects that have been discovered
